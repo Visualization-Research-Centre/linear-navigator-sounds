@@ -1,0 +1,9 @@
+{
+    "interval": 6000,
+    "scheduled_sounds": {
+      "10:30": "morning.wav",
+      "12:45": "lunch.wav",
+      "19:00": "home.wav"
+    }
+}
+  
