@@ -7,11 +7,11 @@ import platform
 from pydub import AudioSegment
 from pydub.playback import play
 
-def play_sound(sound_file):
+def play_sound(sound_file, volume):
     """Plays the specified sound file using pydub."""
     try:
         sound = AudioSegment.from_file(sound_file)
-        play(sound)
+        play(sound * volume)
     except Exception as e:
         print(f"Error playing sound: {e}")
 
@@ -34,6 +34,8 @@ def main():
 
     general_sounds_dir = 'sounds/general'
     timed_sounds_dir = 'sounds/timed'
+    
+    volume = config.get('volume', 0.5)  # Default volume is -20 dB
 
     for dir in [general_sounds_dir, timed_sounds_dir]:
         if not os.path.exists(dir):
@@ -55,7 +57,7 @@ def main():
         # Play timed sounds
         for scheduled_time, sound_file in timed_sound_files.items():
             if current_time >= scheduled_time and  (current_time.minute * 60 + current_time.second) < (scheduled_time.minute * 60 + scheduled_time.second +5): # play if within the current minute
-                play_sound(sound_file)
+                play_sound(sound_file, volume)
                 print(f"Played scheduled sound: {sound_file} at {current_time}")
                 del timed_sound_files[scheduled_time] # remove played sound
                 break # only play one timed sound at a time
@@ -63,7 +65,7 @@ def main():
         # Play general sounds
         if time.time() >= next_general_sound_time:
             if general_sound_files:
-                play_sound(random.choice(general_sound_files))
+                play_sound(random.choice(general_sound_files), volume)
                 next_general_sound_time = time.time() + interval
             else:
                 print("No general sound files to play.")
