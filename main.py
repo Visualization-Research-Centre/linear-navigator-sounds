@@ -11,12 +11,13 @@ def play_sound(sound_file, volume):
     """Plays the specified sound file using pydub."""
     try:
         sound = AudioSegment.from_file(sound_file)
-        play(sound * volume)
+        sound.apply_gain(volume)
+        play(sound)
     except Exception as e:
         print(f"Error playing sound: {e}")
 
 def get_sound_files(directory):
-    return [os.path.join(directory, f) for f in os.listdir(directory) if os.path.isfile(os.path.join(directory, f))]
+    return [os.path.join(directory, f) for f in os.listdir(directory) if os.path.isfile(os.path.join(directory, f)) and f.endswith(('.wav', '.mp3', '.ogg'))]
 
 
 def main():
@@ -43,6 +44,11 @@ def main():
 
     general_sound_files = get_sound_files(general_sounds_dir)
     timed_sound_files = {datetime.datetime.strptime(time, "%H:%M").time(): os.path.join(timed_sounds_dir, file) for time, file in scheduled_sounds.items()}
+    
+    # print the scheduled sounds
+    print("Scheduled sounds:")
+    for t, sound_file in timed_sound_files.items():
+        print(f"{t}: {sound_file}")
 
 
     if not general_sound_files:
@@ -52,7 +58,8 @@ def main():
     next_general_sound_time = time.time() + interval
 
     while True:
-        current_time = datetime.datetime.now().time()
+        current_time = datetime.datetime.strptime(datetime.datetime.now().strftime("%H:%M:%S"), "%H:%M:%S").time()
+        print(f"Current time: {current_time}")
 
         # Play timed sounds
         for scheduled_time, sound_file in timed_sound_files.items():
@@ -67,6 +74,7 @@ def main():
             if general_sound_files:
                 play_sound(random.choice(general_sound_files), volume)
                 next_general_sound_time = time.time() + interval
+                print(f"Played general sound at {datetime.datetime.now()}")
             else:
                 print("No general sound files to play.")
 
