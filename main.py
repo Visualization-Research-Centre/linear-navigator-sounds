@@ -59,7 +59,6 @@ def main():
 
     while True:
         current_time = datetime.datetime.strptime(datetime.datetime.now().strftime("%H:%M:%S"), "%H:%M:%S").time()
-        print(f"Current time: {current_time}")
 
         # Play timed sounds
         for scheduled_time, sound_file in timed_sound_files.items():

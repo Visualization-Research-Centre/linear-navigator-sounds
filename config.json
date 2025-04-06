@@ -1,10 +1,10 @@
 {
-    "interval": 6000,
+    "interval": 600,
     "scheduled_sounds": {
       "10:30": "morning.wav",
       "12:45": "lunch.wav",
       "19:00": "home.wav"
     },
-    "volume": 0.5
+    "volume": 0.2
 }
   
